@@ -13,25 +13,6 @@ var canvas,			// Canvas DOM element
 ** GAME INITIALISATION
 **************************************************/
 function init() {
-	// Declare the canvas and rendering context
-	canvas = document.getElementById("gameCanvas");
-	ctx = canvas.getContext("2d");
-
-	// Maximise the canvas
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-
-	// Initialise keyboard controls
-	keys = new Keys();
-
-	// Calculate a random start position for the local player
-	// The minus 5 (half a player size) stops the player being
-	// placed right on the egde of the screen
-	var startX = Math.round(Math.random()*(canvas.width-5)),
-			startY = Math.round(Math.random()*(canvas.height-5));
-
-	// Initialise the local player
-	localPlayer = new Player(startX, startY);
 
 	// Initialise socket connection
 	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
@@ -48,12 +29,6 @@ function init() {
 ** GAME EVENT HANDLERS
 **************************************************/
 var setEventHandlers = function() {
-	// Keyboard
-	window.addEventListener("keydown", onKeydown, false);
-	window.addEventListener("keyup", onKeyup, false);
-
-	// Window resize
-	window.addEventListener("resize", onResize, false);
 
 	// Socket connection successful
 	socket.on("connect", onSocketConnected);
@@ -71,33 +46,12 @@ var setEventHandlers = function() {
 	socket.on("remove player", onRemovePlayer);
 };
 
-// Keyboard key down
-function onKeydown(e) {
-	if (localPlayer) {
-		keys.onKeyDown(e);
-	};
-};
-
-// Keyboard key up
-function onKeyup(e) {
-	if (localPlayer) {
-		keys.onKeyUp(e);
-	};
-};
-
-// Browser window resize
-function onResize(e) {
-	// Maximise the canvas
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-};
-
 // Socket connected
 function onSocketConnected() {
 	console.log("Connected to socket server");
 
 	// Send local player data to the game server
-	socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
+	socket.emit("new player", {x: tank.x, y: tank.y});
 };
 
 // Socket disconnected
@@ -110,11 +64,10 @@ function onNewPlayer(data) {
 	console.log("New player connected: "+data.id);
 
 	// Initialise the new player
-	var newPlayer = new Player(data.x, data.y);
-	newPlayer.id = data.id;
+	var enemy = new EnemyTank(data.id, data.id, game, data.x, data.y);
 
 	// Add new player to the remote players array
-	remotePlayers.push(newPlayer);
+	remotePlayers.push(enemy);
 };
 
 // Move player
@@ -128,8 +81,7 @@ function onMovePlayer(data) {
 	};
 
 	// Update player position
-	movePlayer.setX(data.x);
-	movePlayer.setY(data.y);
+	movePlayer.update(data.x, data.y, data.angle, data.turret_angle);
 };
 
 // Remove player
@@ -148,46 +100,12 @@ function onRemovePlayer(data) {
 
 
 /**************************************************
-** GAME ANIMATION LOOP
+** UPDATE TANK POS
 **************************************************/
-function animate() {
-	update();
-	draw();
-
-	// Request a new animation frame using Paul Irish's shim
-	window.requestAnimFrame(animate);
+function updateTankPosition(tank) {
+	// Send local player data to the game server
+	socket.emit("move player", {x: tank.x, y: tank.y, angle: tank.rotation, turret_angle: turret.rotation});
 };
-
-
-/**************************************************
-** GAME UPDATE
-**************************************************/
-function update() {
-	// Update local player and check for change
-	if (localPlayer.update(keys)) {
-		// Send local player data to the game server
-		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-	};
-};
-
-
-/**************************************************
-** GAME DRAW
-**************************************************/
-function draw() {
-	// Wipe the canvas clean
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	// Draw the local player
-	localPlayer.draw(ctx);
-
-	// Draw the remote players
-	var i;
-	for (i = 0; i < remotePlayers.length; i++) {
-		remotePlayers[i].draw(ctx);
-	};
-};
-
 
 /**************************************************
 ** GAME HELPER FUNCTIONS

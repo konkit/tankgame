@@ -1,14 +1,18 @@
 var express = require('express')
 var app = express();
+var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var util = require('util');
 
 Player = require("./Player").Player;	// Player class
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 // Serving index.html as default
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  res.render('index');
 });
 
 // Serving static files
@@ -85,9 +89,10 @@ function onMovePlayer(data) {
 	// Update player position
 	movePlayer.setX(data.x);
 	movePlayer.setY(data.y);
+    data.id = this.id;
 
 	// Broadcast updated position to connected socket clients
-	this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
+	this.broadcast.emit("move player", data);
 };
 
 
