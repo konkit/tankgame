@@ -16,7 +16,7 @@
 
 ## Setup
 
-1. Make sure you have node and npm installed ( current node ver - v0.10.25 )
+1. Make sure you have node and npm installed ( current node ver: required 4.0, recommended 5.0 )
 2. Install dependencies with
 
         npm install
