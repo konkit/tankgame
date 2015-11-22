@@ -4,12 +4,12 @@ var Position = require("./Position");
 
 class Missile {
     //directionAngle should be between 0 and 360 where, 0 means north, 90 east, 180 south, 270 west
-    constructor(initialPosition, velocity, maxRange, directionAngle, ownerId) {
+    constructor(ownerId, initialPosition, velocity, maxRange, directionAngle) {
+		this.ownerId = ownerId;
         this.position = initialPosition;
         this.velocity = velocity;
         this.maxRange = maxRange;
         this.directionAngle = directionAngle;
-        this.ownerId = ownerId;
 	}
 
 	updatePosition() {
