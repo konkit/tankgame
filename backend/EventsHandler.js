@@ -82,18 +82,20 @@ class EventsHandler {
         };
     }
 
-    // Shoot
+    // Shoot performed
     _onShoot(client) {
         return (data) => {
-            let missile = this.worldMap
-                .shoot(client.id, data.x, data.y, data.velocity, data.maxRange, data.directionAngle);
+            let missile = this.worldMap.shoot(client.id, data.x, data.y, data.angle);
 
             if (!missile) {
                 util.log(`Shooting not available for player: ${client.id}`);
                 return;
             }
 
-            return true;
+            util.log(
+                `Missile from ${missile.ownerId} targeted to ${missile.target ? missile.target.id : 'nobody'}`
+            );
+            client.broadcast.emit('missile shot', missile.forEmit());
         };
     }
 }

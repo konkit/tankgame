@@ -9,7 +9,7 @@ var socket = require('socket.io');
 var EventsHandler = require('./backend/EventsHandler');
 
 class Application {
-	static run() {
+    static run() {
         let app = Application._initExpress();
         let wwwServer = http.Server(app);
         let wsServer = socket(wwwServer);
@@ -33,4 +33,4 @@ class Application {
 }
 
 if (require.main === module)
-	Application.run();
+    Application.run();

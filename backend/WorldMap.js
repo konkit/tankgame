@@ -42,13 +42,29 @@ class WorldMap {
         return player;
     }
 
-    shoot(id, x, y, velocity, maxRange, directionAngle) {
+    shoot(id, x, y, angle) {
         let player = this._playerById(id);
         if(!player) return;
 
-        let missile = new Missile(
-            id, new Position(x, y), velocity, maxRange, directionAngle
-        );
+        let missile = new Missile(id, new Position(x, y), angle);
+        // have to sort other players from closest to farest from shooter
+        let enemies = this._players
+            .filter((enemy) => player.id !== enemy.id)
+            .map((enemy) => {
+                let xDiff = player.position.x - enemy.position.x;
+                let yDiff = player.position.y - enemy.position.y;
+                let distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+                return [enemy, distance];
+            })
+            .sort((a, b) => a[1] - b[1])
+            .map((tuple) => tuple[0]);
+
+        for(let enemy of enemies) {
+            if (missile.destroys(enemy.position)) {
+                missile.target = enemy;
+                break;
+            }
+        }
         return missile;
     }
 

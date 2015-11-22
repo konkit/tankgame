@@ -1,23 +1,32 @@
 'use strict';
 
-var Position = require("./Position");
+var Position = require('./Position');
 
 class Missile {
-    //directionAngle should be between 0 and 360 where, 0 means north, 90 east, 180 south, 270 west
-    constructor(ownerId, initialPosition, velocity, maxRange, directionAngle) {
+    // have to consider angle towards x-axis
+    constructor(ownerId, initialPosition, angle) {
 		this.ownerId = ownerId;
-        this.position = initialPosition;
-        this.velocity = velocity;
-        this.maxRange = maxRange;
-        this.directionAngle = directionAngle;
+        this.initialPosition = initialPosition;
+        this.target = undefined;
+
+        this._route = (x) => {
+            let a = Math.tan(angle);
+            let b = this.initialPosition.y - (a * this.initialPosition.x);
+            return a * x + b;
+        }
 	}
 
-	updatePosition() {
-		let newX = this.position.x + this.velocity*Math.sin(this.directionAngle * Math.PI / 180);
-		let newY = this.position.y + this.velocity*Math.cos(this.directionAngle * Math.PI / 180);
-		this.position = new Position(newX, newY);
-		return this.position;
-	}
+    destroys(position) {
+        return this._route(position.x) === position.y;
+    }
+
+    forEmit() {
+        return {
+            ownerId: this.ownerId,
+            initialPosition: this.initialPosition,
+            target: this.target
+        };
+    }
 }
 
 module.exports = Missile;
