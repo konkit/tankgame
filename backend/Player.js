@@ -1,11 +1,10 @@
 'use strict';
 
 class Player {
-	constructor(id, startX, startY) {
+	constructor(id, position) {
         this.id = id;
-		this.x = startX;
-		this.y = startY;
-	};
+		this.position = position;
+	}
 }
 
 module.exports = Player;
