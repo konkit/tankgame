@@ -181,7 +181,7 @@ function update () {
         //  Boom!
         fire();
         isShootAvail = false;
-        setTimeout(function(){isShootAvail=true}, 2000);
+        setTimeout(function(){isShootAvail=true}, 500);
     }
 
     updateTankPosition(tank);
@@ -222,4 +222,3 @@ function render () {
     game.debug.text('coord x:' + tank.x.toFixed(3) + ' y:' + tank.y.toFixed(3) + ' angle:' + tank.angle.toFixed(3), 32, 64);
     game.debug.text('turret angle:' + turret.angle.toFixed(3), 32, 80);
 }
-
