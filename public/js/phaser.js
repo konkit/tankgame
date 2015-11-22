@@ -29638,7 +29638,7 @@ Phaser.Signal.prototype = {
     * Remove a single event listener.
     *
     * @method Phaser.Signal#remove
-    * @param {function} listener - Handler function that should be removed.
+    * @param {function} listener - EventsHandler function that should be removed.
     * @param {object} [context=null] - Execution context (since you can add the same handler multiple times if executing in a different context).
     * @return {function} Listener handler function.
     */
@@ -29860,7 +29860,7 @@ Phaser.Signal.prototype.constructor = Phaser.Signal;
 Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority, args) {
 
     /**
-    * @property {Phaser.Game} _listener - Handler function bound to the signal.
+    * @property {Phaser.Game} _listener - EventsHandler function bound to the signal.
     * @private
     */
     this._listener = listener;
@@ -29975,7 +29975,7 @@ Phaser.SignalBinding.prototype = {
     * Detach binding from signal.
     * alias to: @see mySignal.remove(myBinding.getListener());
     * @method Phaser.SignalBinding#detach
-    * @return {function|null} Handler function bound to the signal or `null` if binding was previously detached.
+    * @return {function|null} EventsHandler function bound to the signal or `null` if binding was previously detached.
     */
     detach: function () {
         return this.isBound() ? this._signal.remove(this._listener, this.context) : null;
@@ -29999,7 +29999,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * @method Phaser.SignalBinding#getListener
-    * @return {function} Handler function bound to the signal.
+    * @return {function} EventsHandler function bound to the signal.
     */
     getListener: function () {
         return this._listener;
@@ -39201,7 +39201,7 @@ Phaser.Touch.prototype.constructor = Phaser.Touch;
 Phaser.InputHandler = function (sprite) {
 
     /**
-    * @property {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
+    * @property {Phaser.Sprite} sprite - The Sprite object to which this Input EventsHandler belongs.
     */
     this.sprite = sprite;
 
@@ -39211,7 +39211,7 @@ Phaser.InputHandler = function (sprite) {
     this.game = sprite.game;
 
     /**
-    * @property {boolean} enabled - If enabled the Input Handler will process input requests and monitor pointer activity.
+    * @property {boolean} enabled - If enabled the Input EventsHandler will process input requests and monitor pointer activity.
     * @default
     */
     this.enabled = false;
@@ -39437,11 +39437,11 @@ Phaser.InputHandler = function (sprite) {
 Phaser.InputHandler.prototype = {
 
     /**
-    * Starts the Input Handler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
+    * Starts the Input EventsHandler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
     * @method Phaser.InputHandler#start
     * @param {number} priority - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
     * @param {boolean} useHandCursor - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
-    * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
+    * @return {Phaser.Sprite} The Sprite object to which the Input EventsHandler is bound.
     */
     start: function (priority, useHandCursor) {
 
@@ -39536,7 +39536,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Resets the Input Handler and disables it.
+    * Resets the Input EventsHandler and disables it.
     * @method Phaser.InputHandler#reset
     */
     reset: function () {
@@ -39565,7 +39565,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Stops the Input Handler from running.
+    * Stops the Input EventsHandler from running.
     * @method Phaser.InputHandler#stop
     */
     stop: function () {
@@ -44672,7 +44672,7 @@ Phaser.Component.InputEnabled = function () {};
 Phaser.Component.InputEnabled.prototype = {
 
     /**
-    * The Input Handler for this Game Object.
+    * The Input EventsHandler for this Game Object.
     * 
     * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
     * 
@@ -44685,11 +44685,11 @@ Phaser.Component.InputEnabled.prototype = {
     * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
     * for this Game Object and it will then start to process click / touch events and more.
     * 
-    * You can then access the Input Handler via `this.input`.
+    * You can then access the Input EventsHandler via `this.input`.
     * 
     * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
     * 
-    * If you set this property to false it will stop the Input Handler from processing any more input events.
+    * If you set this property to false it will stop the Input EventsHandler from processing any more input events.
     *
     * @property {boolean} inputEnabled
     */
@@ -59823,7 +59823,7 @@ Phaser.QuadTree.prototype = {
     },
 
     /**
-    * Handler for the populate method.
+    * EventsHandler for the populate method.
     *
     * @method Phaser.QuadTree#populateHandler
     * @param {Phaser.Sprite|object} sprite - The Sprite to check.
