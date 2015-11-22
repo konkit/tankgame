@@ -6,6 +6,7 @@ EnemyTank = function (index, name, game, x, y) {
     this.game = game;
     this.name = name;
     this.id = index;
+    this.alive = true;
 
     this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
     this.tank = game.add.sprite(x, y, 'enemy', 'tank1');
