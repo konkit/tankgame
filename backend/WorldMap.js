@@ -9,6 +9,26 @@ class WorldMap {
         this._players = [];
     }
 
+    initGame(destroyCallback) {
+        (function(local_this) {
+            setInterval(function() {
+                local_this._gameLoop(destroyCallback);
+            }, 50)
+        })(this);
+    }
+
+    _gameLoop(destroyCallback) {
+        for (let player of this._players) {
+            for (let missile of player.missiles) {
+                for (let enemy of this._players){
+                    if (missile.destroys(enemy.position)) {
+                        destroyCallback(enemy, missile);
+                    }
+                }
+            }
+        }
+    }
+
     get players() {
         return this._players;
     }
