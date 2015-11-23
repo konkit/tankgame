@@ -46,7 +46,7 @@ class WorldMap {
         let player = this._playerById(id);
         if(!player) return;
 
-        let missile = new Missile(id, new Position(x, y), angle);
+        let missile = new Missile(new Position(x, y), angle);
         // have to sort other players from closest to farest from shooter
         let enemies = this._players
             .filter((enemy) => player.id !== enemy.id)
@@ -61,7 +61,7 @@ class WorldMap {
 
         for(let enemy of enemies) {
             if (missile.destroys(enemy.position)) {
-                missile.target = enemy;
+                //missile.targetPosition = enemy.position;
                 break;
             }
         }
