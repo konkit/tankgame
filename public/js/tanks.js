@@ -8,7 +8,7 @@ function preload () {
     game.load.image('bullet', '/public/images/game/bullet.png');
     game.load.image('earth', '/public/images/game/scorched_earth.png');
     game.load.spritesheet('kaboom', '/public/images/game/explosion.png', 64, 64, 23);
-    
+
 }
 
 var land;
@@ -116,16 +116,12 @@ function update () {
 
     game.physics.arcade.overlap(enemyBullets, tank, bulletHitPlayer, null, this);
 
-    enemiesAlive = 0;
-
-    for (var i = 0; i < enemies.length; i++)
+    for (var i = 0; i < remotePlayers.length; i++)
     {
-        if (enemies[i].alive)
+        if (remotePlayers[i].alive)
         {
-            enemiesAlive++;
-            game.physics.arcade.collide(tank, enemies[i].tank);
-            game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
-            enemies[i].update();
+            game.physics.arcade.collide(tank, remotePlayers[i].tank);
+            game.physics.arcade.overlap(bullets, remotePlayers[i].tank, bulletHitEnemy, null, this);
         }
     }
 
@@ -185,7 +181,7 @@ function update () {
         //  Boom!
         fire();
         isShootAvail = false;
-        setTimeout(function(){isShootAvail=true}, 2000);
+        setTimeout(function(){isShootAvail=true}, 500);
     }
 
     updateTankPosition(tank);
@@ -200,15 +196,6 @@ function bulletHitPlayer (tank, bullet) {
 function bulletHitEnemy (tank, bullet) {
 
     bullet.kill();
-
-    var destroyed = enemies[tank.name].damage();
-
-    if (destroyed)
-    {
-        var explosionAnimation = explosions.getFirstExists(false);
-        explosionAnimation.reset(tank.x, tank.y);
-        explosionAnimation.play('kaboom', 30, false, true);
-    }
 
 }
 
@@ -235,4 +222,3 @@ function render () {
     game.debug.text('coord x:' + tank.x.toFixed(3) + ' y:' + tank.y.toFixed(3) + ' angle:' + tank.angle.toFixed(3), 32, 64);
     game.debug.text('turret angle:' + turret.angle.toFixed(3), 32, 80);
 }
-
