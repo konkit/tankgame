@@ -3,52 +3,67 @@
 var Position = require('./Position');
 
 class Missile {
-    // have to consider angle towards x-axis
-    constructor(position, angle, velocity) {
-        this.position = position;
-        this._angle = angle;
-		this._velocity = velocity;
-        this._route = this._init_route();
-	}
+  // have to consider angle towards x-axis
+  constructor(position, angle, velocity, range) {
+    this._position = this._initPosition = position;
+    this._angle = angle;
+    this._velocity = velocity;
+    this._range = range;
+    this._route = this._init_route();
+  }
 
-    _init_route() {
-        let a = Math.tan(angle);
-        let b = this._position.y - (a * this._position.x);
-        return (x) => a * x + b;
+  _init_route() {
+    let a = Math.tan(this._angle);
+    let b = this._position.y - (a * this._position.x);
+    return (x) => a * x + b;
+  }
+
+  destroys(position) {
+    let newPosition = _nextPosition();
+
+    if (this._angle >= 0 && this._angle < 90) {
+      if (this._position.x < newPosition.x || this._position.y < newPosition.y)
+        return false;
+    } else if (this._angle >= 90 && this._angle < 180) {
+      if (this._position.x > newPosition.x || this._position.y < newPosition.y)
+        return false;
+    } else if (this._angle >= 180 && this._angle < 270) {
+      if (this._position.x > newPosition.x || this._position.y > newPosition.y)
+        return false;
+    } else if (this._angle >= 270) {
+      if (this._position.x < newPosition.x || this._position.y > newPosition.y)
+        return false;
     }
 
-    getNextPosition() {
-        let newX = this.position.x + _velocity*Math.sin(Math.PI * 2 * angle);
-        let newY = this.position.y + _velocity*Math.cos(Math.PI * 2 * angle);
-        return new Position(newX, newY);
-    }
+    return this._route(position.x) === position.y;
+  }
 
-    destroys(position) {
-        let newPosition = getNextPosition();
-        if (this._angle >= 0 && this._angle < 90) {
-            if (position.x < newPosition.x || position.y < newPosition.y)
-                return false;
-        } else if (this._angle >= 90 && this._angle < 180) {
-            if (position.x > newPosition.x || position.y < newPosition.y)
-                return false;
-        } else if (this._angle >= 180 && this._angle < 270) {
-            if (position.x > newPosition.x || this.position.y > newPosition.y)
-                return false;
-        } else if (this._angle >= 270) {
-            if (position.x < newPosition.x || this.position.y > newPosition.y)
-                return false;
-        }
+  _nextPosition() {
+    let newX = this._position.x + this._velocity * Math.sin(this._angle * Math.PI / 180);
+    let newY = this._position.y + this._velocity * Math.cos(this._angle * Math.PI / 180);
+    return new Position(newX, newY);
+  }
 
-        return this._route(position.x) === position.y;
-    }
+  updatePosition() {
+    this._position = _nextPosition();
 
-    forEmit() {
-        return {
-            ownerId: this.ownerId,
-            initialPosition: this.initialPosition,
-            targetPosition: this.targetPosition
-        };
-    }
+    let xDiff = this._position.x - this._initPosition.x;
+    let yDiff = this._position.y - this._initPosition.y;
+    let distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+    return distance <= this._range;
+  }
+
+  forEmit() {
+    return {
+      position: this._position,
+      angle: this._angle,
+      velocity: this._velocity
+    };
+  }
+
+  get position() {
+    return this._position();
+  }
 }
 
 module.exports = Missile;
