@@ -106,7 +106,12 @@ function create () {
     game.camera.focusOnXY(0, 0);
     game.stage.disableVisibilityChange = true;
 
-    cursors = game.input.keyboard.createCursorKeys();
+    cursors = {
+        up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: game.input.keyboard.addKey(Phaser.Keyboard.D)
+    };
 
     init();
 }
