@@ -5,8 +5,11 @@ var Position = require('./Position');
 var Missile = require('./Missile');
 
 class WorldMap {
-    constructor() {
+    constructor(topLeftCornerPosition, width, height) {
         this._players = [];
+        this.topLeftCornerPosition = topLeftCornerPosition;
+        this.width = width;
+        this.height = height;
     }
 
     get players() {

@@ -2,10 +2,14 @@
 
 var util = require('util');
 var WorldMap = require('./WorldMap');
+var Position
 
 class EventsHandler {
     constructor(wsServer) {
-        this.worldMap = new WorldMap();
+        topLeftCornerPosition = new Position(-1000, -1000);
+        width = 2000;
+        height = 2000;
+        this.worldMap = new WorldMap(topLeftCornerPosition, width, height);
         wsServer.on('connection', this._onSocketConnection());
     }
 
