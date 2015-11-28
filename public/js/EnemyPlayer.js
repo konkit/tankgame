@@ -23,6 +23,10 @@ EnemyTank = function (index, name, game, x, y) {
     this.tank.body.bounce.setTo(1, 1);
 
     this.tank.angle = game.rnd.angle();
+
+    var style = { font: "30px Arial", fill: "#ffffff" };
+    this.label = this.game.add.text(20, 20, name, style);
+    this.tank.addChild(this.label);
 };
 
 EnemyTank.prototype.update = function(x, y, angle, turret_angle) {

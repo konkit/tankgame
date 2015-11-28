@@ -1,9 +1,10 @@
 'use strict';
 
 class Player {
-	constructor(id, position) {
-        this.id = id;
+	constructor(id, position, name) {
+  	this.id = id;
 		this.position = position;
+		this.name = name;
 	}
 }
 

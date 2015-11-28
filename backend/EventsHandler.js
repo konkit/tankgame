@@ -18,7 +18,7 @@ class EventsHandler {
             client.on('disconnect', this._onClientDisconnect(client));
 
             // Listen for new player message
-            client.on('new player', this._onNewPlayer(client));
+            client.on("new player", this._onNewPlayer(client));
 
             // Listen for move player message
             client.on('move player', this._onMovePlayer(client));
@@ -48,20 +48,20 @@ class EventsHandler {
     _onNewPlayer(client) {
         return (data) => {
             // Add new player to the players array
-            let newPlayer = this.worldMap.addPlayer(client.id, data.x, data.y);
+            let newPlayer = this.worldMap.addPlayer(client.id, data.x, data.y, data.name);
 
             if (!newPlayer) {
                 util.log(`Player with id ${client.id} already exists!`);
                 return;
             }
 
-            util.log(`New player has joined the game: ${newPlayer.id}`);
+            util.log(`New player has joined the game: ${newPlayer.name}`);
             // Broadcast new player to connected socket clients
-            client.broadcast.emit('new player', newPlayer);
+            client.broadcast.emit("new player", newPlayer);
             // Send existing players to the new player
             for (let existingPlayer of this.worldMap.players) {
                 if(existingPlayer !== newPlayer)
-                    client.emit('new player', existingPlayer);
+                    client.emit("new player", existingPlayer);
             }
         };
     }
