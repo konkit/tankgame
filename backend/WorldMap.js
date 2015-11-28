@@ -13,12 +13,12 @@ class WorldMap {
         return this._players;
     }
 
-    addPlayer(id, x, y) {
+    addPlayer(id, x, y, name) {
         // Create a new player
         let player = this._playerById(id);
         if (player) return;
 
-        player = new Player(id, new Position(x, y));
+        player = new Player(id, new Position(x, y), name);
         this._players.push(player);
         return player;
     }
