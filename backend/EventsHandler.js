@@ -40,7 +40,7 @@ class EventsHandler {
 
             util.log(`Player has disconnected: ${removedPlayer.id}`);
             // Broadcast removed player to connected socket clients
-            client.broadcast.emit('removing player', { id: removedPlayer.id });
+            client.broadcast.emit('remove player', { id: removedPlayer.id });
         };
     }
 
