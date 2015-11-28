@@ -40,3 +40,9 @@ EnemyTank.prototype.update = function(x, y, angle, turret_angle) {
     this.turret.rotation = turret_angle;
 
 };
+
+EnemyTank.prototype.destroy = function() {
+    this.tank.destroy();
+    this.turret.destroy();
+    this.shadow.destroy();
+}
