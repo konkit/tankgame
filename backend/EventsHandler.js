@@ -62,6 +62,14 @@ class EventsHandler {
             util.log(`New player has joined the game: ${newPlayer.id}`);
             // Broadcast new player to connected socket clients
             client.broadcast.emit('new player', newPlayer);
+
+            client.emit('landscape', {
+              polygons: [
+                { points: [{x: 3, y: 4}, {x: 6, y: 7}], color: "#fff" },
+                { points: [{x: 3, y: 4}, {x: 6, y: 7}] }
+              ]
+            });
+
             // Send existing players to the new player
             for (let existingPlayer of this.worldMap.players) {
                 if(existingPlayer !== newPlayer)
