@@ -44,6 +44,9 @@ var setEventHandlers = function() {
 
 	// Player removed message received
 	socket.on("remove player", onRemovePlayer);
+
+	//Enemy shoot message received
+	socket.on("missile shot", onEnemyShot);
 };
 
 // Socket connected
@@ -87,6 +90,11 @@ function onMovePlayer(data) {
 	movePlayer.update(data.x, data.y, data.angle, data.turret_angle);
 };
 
+function onEnemyShot(data) {
+	var player = playerById(data.ownerId);
+	player.shoot(data.target);
+}
+
 // Remove player
 function onRemovePlayer(data) {
 	var removePlayer = playerById(data.id);
@@ -104,13 +112,16 @@ function onRemovePlayer(data) {
 
 
 /**************************************************
-** UPDATE TANK POS
+** GAME EVENT TRIGGERS
 **************************************************/
-function updateTankPosition(tank) {
+function updateTankPosition() {
 	// Send local player data to the game server
 	socket.emit("move player", {x: tank.x, y: tank.y, angle: tank.rotation, turret_angle: turret.rotation});
 };
 
+function performShooting() {
+	socket.emit("shoot", {x: tank.x, y: tank.y, angle: turret.rotation});
+};
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
