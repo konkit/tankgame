@@ -113,6 +113,7 @@ function create () {
         right: game.input.keyboard.addKey(Phaser.Keyboard.D)
     };
 
+
     init();
 }
 
@@ -206,6 +207,8 @@ function bulletHitEnemy (tank, bullet) {
 
 function fire () {
 
+    performShooting();
+
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
@@ -214,7 +217,7 @@ function fire () {
 
         bullet.reset(turret.x, turret.y);
 
-        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 3000, game.input.activePointer, 500);
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300, game.input.activePointer);
     }
 
 }
