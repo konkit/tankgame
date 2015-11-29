@@ -126,7 +126,7 @@ function update () {
     {
         if (remotePlayers[i].alive)
         {
-            game.physics.arcade.collide(tank, remotePlayers[i].tank);
+            game.physics.arcade.overlap(tank, remotePlayers[i].tank, tankToTankCollision);
             game.physics.arcade.overlap(bullets, remotePlayers[i].tank, bulletHitEnemy, null, this);
         }
     }
@@ -220,6 +220,12 @@ function fire () {
         bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300, game.input.activePointer);
     }
 
+}
+
+function tankToTankCollision() {
+    tank.x = turret.x;
+    tank.y = turret.y;
+    game.physics.arcade.velocityFromRotation(tank.rotation, 0, tank.body.velocity);
 }
 
 function render () {
