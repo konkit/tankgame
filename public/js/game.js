@@ -50,8 +50,11 @@ var setEventHandlers = function() {
 function onSocketConnected() {
 	console.log("Connected to socket server");
 
+	// global tank variable here ? WTF ?
+	var name = prompt("Enter player name");
+
 	// Send local player data to the game server
-	socket.emit("new player", {x: tank.x, y: tank.y});
+	socket.emit("new player", {x: tank.x, y: tank.y, name: name});
 };
 
 // Socket disconnected
@@ -61,10 +64,10 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-	console.log("New player connected: "+data.id);
+	console.log("New player connected: " + data.id);
 
 	// Initialise the new player
-	var enemy = new EnemyTank(data.id, data.id, game, data.x, data.y);
+	var enemy = new EnemyTank(data.id, data.name || "no name", game, data.x, data.y);
 
 	// Add new player to the remote players array
 	remotePlayers.push(enemy);
@@ -95,6 +98,7 @@ function onRemovePlayer(data) {
 	};
 
 	// Remove player from array
+	removePlayer.destroy();
 	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
