@@ -104,8 +104,10 @@ class EventsHandler {
         return;
       }
 
-      util.log(`Missile from ${missile.ownerId} successfully fired!`);
-      client.broadcast.emit('missile fired', missile.forEmit());
+      util.log(`Missile from ${player.id} successfully fired!`);
+
+      missile.ownerId = player.id;
+      client.broadcast.emit('missile fired', missile);
     };
   }
 

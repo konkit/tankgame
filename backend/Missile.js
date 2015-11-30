@@ -53,14 +53,6 @@ class Missile {
     return distance <= this._range;
   }
 
-  forEmit() {
-    return {
-      position: this._position,
-      angle: this._angle,
-      velocity: this._velocity
-    };
-  }
-
   get position() {
     return this._position;
   }
