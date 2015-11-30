@@ -60,12 +60,9 @@ class EventsHandler {
             // Broadcast new player to connected socket clients
             client.broadcast.emit('new player', newPlayer);
 
-                client.emit('landscape', {
-                  polygons: [
-                    { points: [{x: 3, y: 4}, {x: 6, y: 7}], color: "#fff" },
-                    { points: [{x: 3, y: 4}, {x: 6, y: 7}] }
-                  ]
-                });
+                client.emit('landscape',
+                    this.worldMap.obstacles
+                );
 
             // Send existing players to the new player
             for (let existingPlayer of this.worldMap.players) {
