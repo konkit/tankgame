@@ -3,6 +3,7 @@
 var Player = require('./Player');
 var Position = require('./Position');
 var Missile = require('./Missile');
+var MapOrganizer = require('./MapOrganizer');
 
 class WorldMap {
     constructor(topLeftCornerPosition, width, height) {
@@ -10,6 +11,7 @@ class WorldMap {
         this.topLeftCornerPosition = topLeftCornerPosition;
         this.width = width;
         this.height = height;
+        this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
     }
 
     get players() {
@@ -47,7 +49,7 @@ class WorldMap {
 
     shoot(id, x, y, angle) {
         let player = this._playerById(id);
-        if(!player) return;
+        if (!player) return;
 
         let missile = new Missile(id, new Position(x, y), angle);
         // have to sort other players from closest to farest from shooter
@@ -56,13 +58,13 @@ class WorldMap {
             .map((enemy) => {
                 let xDiff = player.position.x - enemy.position.x;
                 let yDiff = player.position.y - enemy.position.y;
-                let distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+                let distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
                 return [enemy, distance];
             })
             .sort((a, b) => a[1] - b[1])
             .map((tuple) => tuple[0]);
 
-        for(let enemy of enemies) {
+        for (let enemy of enemies) {
             if (missile.destroys(enemy.position)) {
                 missile.target = enemy;
                 break;
