@@ -39,6 +39,8 @@ var setEventHandlers = function() {
 	// New player message received
 	socket.on("new player", onNewPlayer);
 
+	socket.on("existing players", onExistingPlayers);
+
 	// Player move message received
 	socket.on("move player", onMovePlayer);
 
@@ -70,24 +72,35 @@ function onNewPlayer(data) {
 	console.log("New player connected: " + data.id);
 
 	// Initialise the new player
-	var enemy = new EnemyTank(data.id, data.name || "no name", game, data.x, data.y);
+	var enemy = new EnemyTank(data._id, data._name || "no name", game, data._position.x, data._position.y);
 
 	// Add new player to the remote players array
 	remotePlayers.push(enemy);
 };
 
+// Existing players
+function onExistingPlayers(data) {
+
+	data.forEach(function(player){
+		var enemy = new EnemyTank(player._id, player._name || "no name", game, player._position.x, player._position.y);
+		remotePlayers.push(enemy);
+	});
+
+	// Add new player to the remote players array
+};
+
 // Move player
 function onMovePlayer(data) {
-	var movePlayer = playerById(data.id);
+	var movePlayer = playerById(data._id);
 
 	// Player not found
 	if (!movePlayer) {
-		console.log("Player not found: "+data.id);
+		console.log("Player not found: "+data._id);
 		return;
 	};
 
 	// Update player position
-	movePlayer.update(data.x, data.y, data.angle, data.turret_angle);
+	movePlayer.update(data._position.x, data._position.y, data.angle, data.turret_angle);
 };
 
 function onEnemyShot(data) {
@@ -120,7 +133,7 @@ function updateTankPosition() {
 };
 
 function performShooting() {
-	socket.emit("shoot", {x: tank.x, y: tank.y, angle: turret.rotation});
+	socket.emit("shoot", {position: {x: tank.x, y: tank.y}, angle: turret.rotation});
 };
 /**************************************************
 ** GAME HELPER FUNCTIONS

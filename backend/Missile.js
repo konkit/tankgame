@@ -19,7 +19,7 @@ class Missile {
   }
 
   destroys(position) {
-    let newPosition = _nextPosition();
+    let newPosition = this._nextPosition();
 
     if (this._angle >= 0 && this._angle < 90) {
       if (this._position.x < newPosition.x || this._position.y < newPosition.y)
@@ -45,7 +45,7 @@ class Missile {
   }
 
   updatePosition() {
-    this._position = _nextPosition();
+    this._position = this._nextPosition();
 
     let xDiff = this._position.x - this._initPosition.x;
     let yDiff = this._position.y - this._initPosition.y;
@@ -62,7 +62,7 @@ class Missile {
   }
 
   get position() {
-    return this._position();
+    return this._position;
   }
 }
 

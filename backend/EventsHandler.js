@@ -78,10 +78,10 @@ class EventsHandler {
         util.log(`Player not found: ${id}`);
         return;
       }
-
+      movedPlayer.angle = data.angle;
+      movedPlayer.turret_angle = data.turret_angle;
       // Broadcast updated position to connected socket clients
-      data.id = movedPlayer.id;
-      client.broadcast.emit('move player', data);
+      client.broadcast.emit('move player', movedPlayer);
     };
   }
 
@@ -90,6 +90,14 @@ class EventsHandler {
     return (data) => {
       let missile = new Missile(data.position, data.angle, data.velocity, data.range);
       let player = this.worldMap.shoot(client.id, missile);
+
+      if (!data.velocity) {
+        missile.velocity = 300;
+      }
+
+      if (!data.range) {
+        missile.range = 1000;
+      }
 
       if (!player) {
         util.log(`Shooting not available for player: ${client.id}`);
