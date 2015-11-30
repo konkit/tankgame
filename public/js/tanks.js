@@ -106,7 +106,13 @@ function create () {
     game.camera.focusOnXY(0, 0);
     game.stage.disableVisibilityChange = true;
 
-    cursors = game.input.keyboard.createCursorKeys();
+    cursors = {
+        up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: game.input.keyboard.addKey(Phaser.Keyboard.D)
+    };
+
 
     init();
 }
@@ -120,7 +126,7 @@ function update () {
     {
         if (remotePlayers[i].alive)
         {
-            game.physics.arcade.collide(tank, remotePlayers[i].tank);
+            game.physics.arcade.overlap(tank, remotePlayers[i].tank, tankToTankCollision);
             game.physics.arcade.overlap(bullets, remotePlayers[i].tank, bulletHitEnemy, null, this);
         }
     }
@@ -201,6 +207,8 @@ function bulletHitEnemy (tank, bullet) {
 
 function fire () {
 
+    performShooting();
+
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
         nextFire = game.time.now + fireRate;
@@ -209,9 +217,15 @@ function fire () {
 
         bullet.reset(turret.x, turret.y);
 
-        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 3000, game.input.activePointer, 500);
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300, game.input.activePointer);
     }
 
+}
+
+function tankToTankCollision() {
+    tank.x = turret.x;
+    tank.y = turret.y;
+    game.physics.arcade.velocityFromRotation(tank.rotation, 0, tank.body.velocity);
 }
 
 function render () {

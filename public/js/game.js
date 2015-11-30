@@ -44,14 +44,20 @@ var setEventHandlers = function() {
 
 	// Player removed message received
 	socket.on("remove player", onRemovePlayer);
+
+	//Enemy shoot message received
+	socket.on("missile shot", onEnemyShot);
 };
 
 // Socket connected
 function onSocketConnected() {
 	console.log("Connected to socket server");
 
+	// global tank variable here ? WTF ?
+	var name = prompt("Enter player name");
+
 	// Send local player data to the game server
-	socket.emit("new player", {x: tank.x, y: tank.y});
+	socket.emit("new player", {x: tank.x, y: tank.y, name: name});
 };
 
 // Socket disconnected
@@ -61,10 +67,10 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-	console.log("New player connected: "+data.id);
+	console.log("New player connected: " + data.id);
 
 	// Initialise the new player
-	var enemy = new EnemyTank(data.id, data.id, game, data.x, data.y);
+	var enemy = new EnemyTank(data.id, data.name || "no name", game, data.x, data.y);
 
 	// Add new player to the remote players array
 	remotePlayers.push(enemy);
@@ -84,6 +90,11 @@ function onMovePlayer(data) {
 	movePlayer.update(data.x, data.y, data.angle, data.turret_angle);
 };
 
+function onEnemyShot(data) {
+	var player = playerById(data.ownerId);
+	player.shoot(data.target);
+}
+
 // Remove player
 function onRemovePlayer(data) {
 	var removePlayer = playerById(data.id);
@@ -95,18 +106,22 @@ function onRemovePlayer(data) {
 	};
 
 	// Remove player from array
+	removePlayer.destroy();
 	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
 
 /**************************************************
-** UPDATE TANK POS
+** GAME EVENT TRIGGERS
 **************************************************/
-function updateTankPosition(tank) {
+function updateTankPosition() {
 	// Send local player data to the game server
 	socket.emit("move player", {x: tank.x, y: tank.y, angle: tank.rotation, turret_angle: turret.rotation});
 };
 
+function performShooting() {
+	socket.emit("shoot", {x: tank.x, y: tank.y, angle: turret.rotation});
+};
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
