@@ -39,8 +39,8 @@ class Missile {
   }
 
   _nextPosition() {
-    let newX = this._position.x + this._velocity * Math.sin(this._angle * Math.PI / 180);
-    let newY = this._position.y + this._velocity * Math.cos(this._angle * Math.PI / 180);
+    let newX = this._position.x + this._velocity * Math.cos(this._angle);
+    let newY = this._position.y + this._velocity * Math.sin(this._angle);
     return new Position(newX, newY);
   }
 
