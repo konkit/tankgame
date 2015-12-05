@@ -1,6 +1,7 @@
 {
   "name": "TankGame",
   "dependencies": {
+    "jquery": "~2.1.4",
     "phaser": "2.4.4"
   },
   "private": true

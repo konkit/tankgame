@@ -49,6 +49,8 @@ var setEventHandlers = function() {
 
 	//Enemy shoot message received
 	socket.on("missile shot", onEnemyShot);
+
+	socket.on("scores update", onScoresUpdate);
 };
 
 // Socket connected
@@ -123,6 +125,14 @@ function onRemovePlayer(data) {
 	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
+function onScoresUpdate(data) {
+    var scoreTable = '<table>';
+    data.forEach(function (user) {
+        scoreTable += '<tr><td>' + user.name + '</td><td>' + user.score + '</td></tr>'
+    });
+    scoreTable += '</table>';
+    $('#highscores').html(scoreTable);
+}
 
 /**************************************************
 ** GAME EVENT TRIGGERS

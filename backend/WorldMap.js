@@ -3,9 +3,11 @@
 var Player = require('./Player');
 var Position = require('./Position');
 var Missile = require('./Missile');
+var ScoreManager = require('./ScoreManager')
 
 class WorldMap {
-  constructor() {
+  constructor(wsServer) {
+    this.scoreManager = new ScoreManager(wsServer)
     this._players = [];
   }
 
@@ -29,6 +31,7 @@ class WorldMap {
             if (missile.destroys(enemy.position)) {
               player.shotSucceeded(missile);
               this.removePlayer(enemy.id);
+              this.scoreManager.updateScores(this._players)
 
               destroyCallback(enemy, missile);
               break;
@@ -45,7 +48,7 @@ class WorldMap {
     let player = this._playerById(id);
     if (player) return;
 
-    player = new Player(id, new Position(x, y));
+    player = new Player(id, name, new Position(x, y));
     this._players.push(player);
     return player;
   }
