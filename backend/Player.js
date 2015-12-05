@@ -10,7 +10,7 @@ class Player {
   }
 
   shotSucceeded(missile) {
-    let idx = this._missiles.indexOf(missile);
+    let index = this._missiles.indexOf(missile);
     this._missiles.splice(index, 1);
     this._score++;
   }
