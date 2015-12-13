@@ -48,7 +48,7 @@ var setEventHandlers = function() {
 	socket.on("remove player", onRemovePlayer);
 
 	//Enemy shoot message received
-	socket.on("missile shot", onEnemyShot);
+	socket.on("missile fired", onEnemyShot);
 
 	socket.on("scores update", onScoresUpdate);
 };
@@ -106,8 +106,13 @@ function onMovePlayer(data) {
 };
 
 function onEnemyShot(data) {
-	var player = playerById(data.ownerId);
-	player.shoot(data.target);
+	var bullet = enemyBullets.getFirstDead();
+	bullet.reset(data._position.x, data._position.y);
+
+	var end_x = Math.cos(data._angle) * data._range;
+	var end_y = Math.sin(data._angle) * data._range;
+
+	bullet.rotation = game.physics.arcade.moveToXY(bullet, data._position.x + end_x, data._position.y + end_y, data._velocity);
 }
 
 // Remove player
