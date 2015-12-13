@@ -59,8 +59,15 @@ EnemyTank.prototype.shoot = function(target) {
     }
 };
 
-EnemyTank.prototype.destroy = function() {
+EnemyTank.prototype.destroy = function(withKaboom) {
+    withKaboom = (typeof withKaboom != 'undefined' && withKaboom) || false;
     this.tank.destroy();
     this.turret.destroy();
     this.shadow.destroy();
+
+    if(withKaboom) {
+        var explosionAnimation = explosions.getFirstExists(false);
+        explosionAnimation.reset(this.tank.x, this.tank.y);
+        explosionAnimation.play('kaboom', 30, false, true);
+    }
 };

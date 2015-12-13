@@ -45,12 +45,14 @@ var setEventHandlers = function() {
 	socket.on("move player", onMovePlayer);
 
 	// Player removed message received
-	socket.on("remove player", onRemovePlayer);
+	socket.on("removing player", onRemovePlayer);
 
 	//Enemy shoot message received
 	socket.on("missile fired", onEnemyShot);
 
 	socket.on("scores update", onScoresUpdate);
+
+	socket.on("player destroyed", onPlayerDestoryed);
 };
 
 // Socket connected
@@ -71,7 +73,7 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-	console.log("New player connected: " + data.id);
+	console.log("New player connected: " + data._id);
 
 	// Initialise the new player
 	var enemy = new EnemyTank(data._id, data._name || "no name", game, data._position.x, data._position.y);
@@ -137,6 +139,11 @@ function onScoresUpdate(data) {
     });
     scoreTable += '</table>';
     $('#highscores').html(scoreTable);
+}
+
+function onPlayerDestoryed(data) {
+	var player = playerById(data.player._id);
+	player.destroy(true);
 }
 
 /**************************************************
