@@ -75,7 +75,7 @@ class EventsHandler {
       let movedPlayer = this.worldMap.movePlayer(client.id, data.x, data.y);
 
       if (!movedPlayer) {
-        util.log(`Player not found: ${id}`);
+        util.log(`Player not found: ${client.id}`);
         return;
       }
       movedPlayer.angle = data.angle;

@@ -43,7 +43,7 @@ class WorldMap {
     }, 100);
   }
 
-  addPlayer(id, x, y) {
+  addPlayer(id, name, x, y) {
     // Create a new player
     let player = this._playerById(id);
     if (player) return;
