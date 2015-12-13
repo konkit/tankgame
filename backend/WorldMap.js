@@ -4,12 +4,16 @@ var Player = require('./Player');
 var Position = require('./Position');
 var Missile = require('./Missile');
 var ScoreManager = require('./ScoreManager')
+var MapOrganizer = require('./MapOrganizer');
 
 class WorldMap {
-  constructor(wsServer) {
-    this.scoreManager = new ScoreManager(wsServer)
-    this._players = [];
-  }
+	constructor(topLeftCornerPosition, width, height) {
+		this._players = [];
+		this.topLeftCornerPosition = topLeftCornerPosition;
+		this.width = width;
+		this.height = height;
+		this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
+	}
 
   runGame(destroyCallback, missileLostCallback) {
     setInterval(() => {
