@@ -19,28 +19,15 @@ class Missile {
   }
 
   destroys(position) {
-    let newPosition = this._nextPosition();
-
-    if (this._angle >= 0 && this._angle < 90) {
-      if (this._position.x < newPosition.x || this._position.y < newPosition.y)
-        return false;
-    } else if (this._angle >= 90 && this._angle < 180) {
-      if (this._position.x > newPosition.x || this._position.y < newPosition.y)
-        return false;
-    } else if (this._angle >= 180 && this._angle < 270) {
-      if (this._position.x > newPosition.x || this._position.y > newPosition.y)
-        return false;
-    } else if (this._angle >= 270) {
-      if (this._position.x < newPosition.x || this._position.y > newPosition.y)
-        return false;
-    }
-
-    return this._route(position.x) === position.y;
+    let dx = position.x - this.position.x;
+    let dy = position.y - this.position.y;
+    let enemyDistance = Math.sqrt(dx*dx + dy*dy);
+    return enemyDistance < 35;
   }
 
   _nextPosition() {
-    let newX = this._position.x + this._velocity * Math.sin(this._angle * Math.PI / 180);
-    let newY = this._position.y + this._velocity * Math.cos(this._angle * Math.PI / 180);
+    let newX = this._position.x + this._velocity * Math.cos(this._angle);
+    let newY = this._position.y + this._velocity * Math.sin(this._angle);
     return new Position(newX, newY);
   }
 

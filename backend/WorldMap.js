@@ -29,6 +29,7 @@ class WorldMap {
 
           for (let enemy of enemies) {
             if (missile.destroys(enemy.position)) {
+              console.log(`Player ${enemy.id} hit by ${player.id}`);
               player.shotSucceeded(missile);
               this.removePlayer(enemy.id);
               this.scoreManager.updateScores(this._players)

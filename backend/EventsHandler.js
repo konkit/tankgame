@@ -91,14 +91,6 @@ class EventsHandler {
       let missile = new Missile(data.position, data.angle, data.velocity, data.range);
       let player = this.worldMap.shoot(client.id, missile);
 
-      if (!data.velocity) {
-        missile.velocity = 300;
-      }
-
-      if (!data.range) {
-        missile.range = 1000;
-      }
-
       if (!player) {
         util.log(`Shooting not available for player: ${client.id}`);
         return;
