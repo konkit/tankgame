@@ -7,8 +7,8 @@ class Missile {
   constructor(position, angle, velocity, range) {
     this._position = this._initPosition = position;
     this._angle = angle;
-    this._velocity = velocity;
-    this._range = range;
+    this._velocity = (typeof velocity != 'undefined' && velocity) || 300;
+    this._range = (typeof range != 'undefined' && range) || 500;
     this._route = this._init_route();
   }
 
