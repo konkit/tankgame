@@ -88,14 +88,6 @@ class EventsHandler {
   // Shoot performed
   _onShoot(client) {
     return (data) => {
-      if (!data.velocity) {
-        data.velocity = 30;
-      }
-
-      if (!data.range) {
-        data.range = 1000;
-      }
-
       let missile = new Missile(data.position, data.angle, data.velocity, data.range);
       let player = this.worldMap.shoot(client.id, missile);
 
