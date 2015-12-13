@@ -7,7 +7,7 @@ var Missile = require('./Missile');
 class EventsHandler {
   constructor(wsServer) {
     wsServer.on('connection', this._onSocketConnection());
-    this.worldMap = new WorldMap();
+    this.worldMap = new WorldMap(wsServer);
     this.worldMap.runGame(this._onDestroy(wsServer), this._onMissileLost(wsServer));
   }
 
@@ -52,7 +52,7 @@ class EventsHandler {
   _onNewPlayer(client) {
     return (data) => {
       // Add new player to the players array
-      let newPlayer = this.worldMap.addPlayer(client.id, data.x, data.y);
+      let newPlayer = this.worldMap.addPlayer(client.id, data.name, data.x, data.y);
 
       if (!newPlayer) {
         util.log(`Player with id ${client.id} already exists!`);

@@ -1,16 +1,18 @@
 'use strict';
 
 class Player {
-  constructor(id, position) {
+  constructor(id, name, position) {
     this._id = id;
+    this._name = name;
     this._position = position;
     this._missiles = [];
+    this._score = 0;
   }
 
   shotSucceeded(missile) {
     let idx = this._missiles.indexOf(missile);
     this._missiles.splice(index, 1);
-    // some points or sth may be admitted here
+    this._score++;
   }
 
   updateMissilesPos(missileLostCallback) {
@@ -38,6 +40,14 @@ class Player {
 
   get missiles() {
     return this._missiles;
+  }
+
+  get score() {
+    return this._score;
+  }
+
+  get name() {
+    return this._name;
   }
 }
 
