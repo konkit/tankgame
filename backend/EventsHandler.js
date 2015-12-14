@@ -106,7 +106,11 @@ class EventsHandler {
   _onDestroy(wsServer) {
     return (player, missile) => {
       util.log(`Player ${player.id} destroyed!`);
-      wsServer.sockets.emit('player destroyed', { player: player, missile: missile });
+
+      let message = {player: player, missile: missile};
+      wsServer.sockets.emit('player destroyed', message);
+      let destroyedClient = wsServer.sockets.sockets.filter(socket => socket.id === player.id);
+      destroyedClient.emit('destroyed', message)
     }
   }
 
