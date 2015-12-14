@@ -7,12 +7,13 @@ var ScoreManager = require('./ScoreManager')
 var MapOrganizer = require('./MapOrganizer');
 
 class WorldMap {
-	constructor(topLeftCornerPosition, width, height) {
+	constructor(topLeftCornerPosition, width, height, wsServer) {
 		this._players = [];
 		this.topLeftCornerPosition = topLeftCornerPosition;
 		this.width = width;
 		this.height = height;
 		this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
+		this.scoreManager = new ScoreManager(wsServer);
 	}
 
   runGame(destroyCallback, missileLostCallback) {
