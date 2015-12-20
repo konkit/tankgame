@@ -131,6 +131,12 @@ function update () {
         }
     }
 
+    if(obstacles) {
+      for(var i = 0; i < obstacles.length; i++) {
+        game.physics.arcade.overlap(tank, obstacles[i], playerHitObstacle);
+      }
+    }
+
     if (cursors.left.isDown)
     {
         tank.angle -= 2;
@@ -197,6 +203,11 @@ function bulletHitPlayer (tank, bullet) {
 
     bullet.kill();
 
+}
+
+function playerHitObstacle() {
+  tank.x = turret.x;
+  tank.y = turret.y;
 }
 
 function bulletHitEnemy (tank, bullet) {
