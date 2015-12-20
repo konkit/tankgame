@@ -30,22 +30,53 @@ class MapOrganizer {
     createMap() {
         let plan = [];
         let polygonSide = 400;
-        let spawnArea = this.createPolygon({'x': -200, 'y': -200}, polygonSide)
+        // let spawnArea = this.createPolygon({'x': -200, 'y': -200}, polygonSide)
 
-        for (let i = 0; i < this.obstacleNumber; i++) {
-            //TODo Chck collison
-            plan.push({
-                'points': this.createPolygon({
-                    'x': this.getRandomInt(0, this.mapXSize - polygonSide),
-                    'y': this.getRandomInt(0, this.mapYSize - polygonSide),
-                    color: "#fff"
-                }, polygonSide)
-            })
+        for (let i = 0; i < this.obstacleNumber + this.spawnAreaNumber; i++) {
+
+            let isColision = true
+            while (isColision) {
+              let polygon = this.createPolygon({
+                  'x': this.getRandomInt(0, this.mapXSize - polygonSide),
+                  'y': this.getRandomInt(0, this.mapYSize - polygonSide),
+                  color: "#fff"
+              }, polygonSide)
+
+              for(let j = 0; j < plan.length; j++) {
+                  if(polygon.x > plan[j].x && polygon.x < plan[x] + polygonSide
+                    && polygon.y > plan[j].y && polygon.y < plan[j].y + polygonSide) {
+                      isColision = true
+                  }
+                  else if(polygon.x > plan[j].x && polygon.x < plan[x] + polygonSide
+                    && polygon.y + polygonSide > plan[j].y && polygon.y < plan[j].y) {
+                      isColision = true
+                  }
+                  else if(polygon.x + polygonSide > plan[j].x && polygon.x < plan[j].x
+                    && polygon.y > plan[j].y && polygon.y < plan[j].y + polygonSide) {
+                      isColision = true
+                  }
+                  else if(polygon.x + polygonSide > plan[j].x && polygon.x < plan[j].x
+                    && polygon.y + polygonSide > plan[j].y && polygon.y < plan[j].y) {
+                      isColision = true
+                  }
+                  else {
+                    isColision = false
+                    plan.push({
+                      'points': this.createPolygon({
+                          'x': polygon.x,
+                          'y': polygon.y,
+                          color: "#fff"
+                      }, polygonSide)
+                    })
+                  }
+              }
+          }
         }
-
 
         return {'polygons': plan};
     }
+
+
 }
 
 
