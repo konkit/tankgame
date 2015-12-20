@@ -65,6 +65,13 @@ class EventsHandler {
       client.emit('existing players', this.worldMap.players
         .filter((player) => player.id !== newPlayer.id)
       );
+
+      // emit obstacles
+      util.log("Sending obstacles");
+      client.emit('obstacles', this.worldMap.obstacles);
+
+
+
       // Broadcast new player to connected socket clients
       client.broadcast.emit('new player', newPlayer);
     };

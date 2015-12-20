@@ -41,6 +41,8 @@ var setEventHandlers = function() {
 
 	socket.on("existing players", onExistingPlayers);
 
+	socket.on("obstacles", onObstacles);
+
 	// Player move message received
 	socket.on("move player", onMovePlayer);
 
@@ -92,6 +94,21 @@ function onExistingPlayers(data) {
 
 	// Add new player to the remote players array
 };
+
+function onObstacles(data) {
+	phaserPolygons = data.polygons.map(function(polygon) { return new Phaser.Polygon(polygon.points) });
+
+	phaserPolygons.forEach(function(poly) {
+		console.debug(poly);
+		graphics = game.add.graphics(0, 0);
+
+		graphics.beginFill(0x5E563A);
+		graphics.drawPolygon(poly.points);
+		graphics.endFill();
+	});
+
+
+}
 
 // Move player
 function onMovePlayer(data) {
