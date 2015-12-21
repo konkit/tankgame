@@ -16,7 +16,7 @@ var canvas,			// Canvas DOM element
 function init() {
 
 	// Initialise socket connection
-	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+	socket = io.connect(window.location.hostname, {port: 8000, transports: ["websocket"]});
 
 	// Initialise remote players array
 	remotePlayers = [];
