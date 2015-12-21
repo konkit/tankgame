@@ -15,9 +15,9 @@ class Player {
     this._score++;
   }
 
-  updateMissilesPos(missileLostCallback) {
+  updateMissilesPos(missileLostCallback, deltaTime) {
     for (let missile of this._missiles) {
-      let missileAvailable = missile.updatePosition();
+      let missileAvailable = missile.updatePosition(deltaTime);
       if (!missileAvailable) {
         let idx = this._missiles.indexOf(missile);
         this._missiles.splice(idx, 1);
