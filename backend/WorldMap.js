@@ -1,5 +1,7 @@
 'use strict';
 
+var UPDATE_INTERVAL = 100;   // miliseconds
+
 var Player = require('./Player');
 var Position = require('./Position');
 var Missile = require('./Missile');
@@ -18,6 +20,8 @@ class WorldMap {
 
   runGame(destroyCallback, missileLostCallback) {
     setInterval(() => {
+      let deltaTime = UPDATE_INTERVAL / 1000;   // Fixed value for now, ideally should be measured since the last iteration
+
       for (let player of this._players) {
         for (let missile of player.missiles) {
           // have to sort other players from closest to farest from missile
@@ -44,9 +48,9 @@ class WorldMap {
             }
           }
         }
-        player.updateMissilesPos(missileLostCallback);
+        player.updateMissilesPos(missileLostCallback, deltaTime);
       }
-    }, 100);
+    }, UPDATE_INTERVAL);
   }
 
   addPlayer(id, name, x, y) {
