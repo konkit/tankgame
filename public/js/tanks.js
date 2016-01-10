@@ -202,7 +202,13 @@ function update () {
 function bulletHitPlayer (tank, bullet) {
 
     bullet.kill();
+    showGameOverScreen();
+}
 
+function showGameOverScreen() {
+    game.paused = true;
+    var style = { font: "30px Arial", fill: "#ffffff" };
+    game.add.text(-20, -200, "Game over!", style);
 }
 
 function playerHitObstacle() {
