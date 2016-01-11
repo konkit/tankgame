@@ -54,6 +54,10 @@ class Player {
   get hits() {
     return this._hits;
   }
+
+  set hits(newValue){
+    this._hits = newValue;
+  }
 }
 
 module.exports = Player;

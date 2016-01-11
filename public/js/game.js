@@ -87,7 +87,7 @@ function onNewPlayer(data) {
 	console.log("New player connected: " + data._id);
 
 	// Initialise the new player
-	var enemy = new EnemyTank(data._id, data._name || "no name", game, data._position.x, data._position.y);
+	var enemy = new EnemyTank(data._id, data._name || "no name", game, data._position.x, data._position.y, 0);
 
 	// Add new player to the remote players array
 	remotePlayers.push(enemy);
