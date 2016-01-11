@@ -15,7 +15,7 @@ class WorldMap {
 		this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
 	}
 
-  runGame(destroyCallback, missileLostCallback) {
+  runGame(hitCallback, missileLostCallback) {
     setInterval(() => {
       for (let player of this._players) {
         for (let missile of player.missiles) {
@@ -38,7 +38,7 @@ class WorldMap {
               this.removePlayer(enemy.id);
               this.scoreManager.updateScores(this._players)
 
-              destroyCallback(enemy, missile);
+              hitCallback(enemy, missile);
               break;
             }
           }
