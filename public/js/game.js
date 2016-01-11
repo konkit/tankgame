@@ -6,7 +6,8 @@ var canvas,			// Canvas DOM element
 		keys,			// Keyboard input
 		localPlayer,	// Local player
 		remotePlayers,	// Remote players
-		socket;			// Socket connection
+		socket,			// Socket connection
+		obstacles;
 
 
 /**************************************************
@@ -15,7 +16,7 @@ var canvas,			// Canvas DOM element
 function init() {
 
 	// Initialise socket connection
-	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+	socket = io.connect(window.location.hostname, {port: 8000, transports: ["websocket"]});
 
 	// Initialise remote players array
 	remotePlayers = [];
@@ -39,19 +40,33 @@ var setEventHandlers = function() {
 	// New player message received
 	socket.on("new player", onNewPlayer);
 
+	socket.on("existing players", onExistingPlayers);
+
+	socket.on("obstacles", onObstacles);
+
 	// Player move message received
 	socket.on("move player", onMovePlayer);
 
 	// Player removed message received
-	socket.on("remove player", onRemovePlayer);
+	socket.on("removing player", onRemovePlayer);
+
+	//Enemy shoot message received
+	socket.on("missile fired", onEnemyShot);
+
+	socket.on("scores update", onScoresUpdate);
+
+	socket.on("player destroyed", onPlayerDestoryed);
 };
 
 // Socket connected
 function onSocketConnected() {
 	console.log("Connected to socket server");
 
+	// global tank variable here ? WTF ?
+	var name = prompt("Enter player name");
+
 	// Send local player data to the game server
-	socket.emit("new player", {x: tank.x, y: tank.y});
+	socket.emit("new player", {x: tank.x, y: tank.y, name: name});
 };
 
 // Socket disconnected
@@ -61,28 +76,72 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-	console.log("New player connected: "+data.id);
+	console.log("New player connected: " + data._id);
 
 	// Initialise the new player
-	var enemy = new EnemyTank(data.id, data.id, game, data.x, data.y);
+	var enemy = new EnemyTank(data._id, data._name || "no name", game, data._position.x, data._position.y);
 
 	// Add new player to the remote players array
 	remotePlayers.push(enemy);
 };
 
+// Existing players
+function onExistingPlayers(data) {
+
+	data.forEach(function(player){
+		var enemy = new EnemyTank(player._id, player._name || "no name", game, player._position.x, player._position.y);
+		remotePlayers.push(enemy);
+	});
+
+	// Add new player to the remote players array
+};
+
+function onObstacles(data) {
+	phaserPolygons = data.polygons.map(function(polygon) { return new Phaser.Polygon(polygon.points) });
+	polygons = game.add.group();
+
+	obstacles = phaserPolygons.map(function(poly) {
+		var graphics = game.add.graphics(0, 0);
+
+		graphics.beginFill(0x5E563A);
+		graphics.drawPolygon(poly.points);
+		graphics.endFill();
+
+		var bounds = graphics.getBounds();
+
+		shapeSprite = game.add.sprite(bounds.x, bounds.y, null);
+		game.physics.enable(shapeSprite, Phaser.Physics.ARCADE);
+
+		shapeSprite.body.setSize(bounds.width, bounds.height, 0, 0);
+		shapeSprite.body.immovable = true;
+
+		return shapeSprite;
+	});
+}
+
 // Move player
 function onMovePlayer(data) {
-	var movePlayer = playerById(data.id);
+	var movePlayer = playerById(data._id);
 
 	// Player not found
 	if (!movePlayer) {
-		console.log("Player not found: "+data.id);
+		console.log("Player not found: "+data._id);
 		return;
 	};
 
 	// Update player position
-	movePlayer.update(data.x, data.y, data.angle, data.turret_angle);
+	movePlayer.update(data._position.x, data._position.y, data.angle, data.turret_angle);
 };
+
+function onEnemyShot(data) {
+	var bullet = enemyBullets.getFirstDead();
+	bullet.reset(data._position.x, data._position.y);
+
+	var end_x = Math.cos(data._angle) * data._range;
+	var end_y = Math.sin(data._angle) * data._range;
+
+	bullet.rotation = game.physics.arcade.moveToXY(bullet, data._position.x + end_x, data._position.y + end_y, data._velocity);
+}
 
 // Remove player
 function onRemovePlayer(data) {
@@ -99,15 +158,31 @@ function onRemovePlayer(data) {
 	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
 
+function onScoresUpdate(data) {
+    var scoreTable = '<table>';
+    data.forEach(function (user) {
+        scoreTable += '<tr><td>' + user.name + '</td><td>' + user.score + '</td></tr>'
+    });
+    scoreTable += '</table>';
+    $('#highscores').html(scoreTable);
+}
+
+function onPlayerDestoryed(data) {
+	var player = playerById(data.player._id);
+	player.destroy(true);
+}
 
 /**************************************************
-** UPDATE TANK POS
+** GAME EVENT TRIGGERS
 **************************************************/
-function updateTankPosition(tank) {
+function updateTankPosition() {
 	// Send local player data to the game server
 	socket.emit("move player", {x: tank.x, y: tank.y, angle: tank.rotation, turret_angle: turret.rotation});
 };
 
+function performShooting() {
+	socket.emit("shoot", {position: {x: tank.x, y: tank.y}, angle: turret.rotation});
+};
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/

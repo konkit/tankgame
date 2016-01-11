@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-window', { preload: preload, create: create, update: update, render: render });
 
 function preload () {
 
@@ -113,6 +113,7 @@ function create () {
         right: game.input.keyboard.addKey(Phaser.Keyboard.D)
     };
 
+
     init();
 }
 
@@ -125,9 +126,15 @@ function update () {
     {
         if (remotePlayers[i].alive)
         {
-            game.physics.arcade.collide(tank, remotePlayers[i].tank);
+            game.physics.arcade.overlap(tank, remotePlayers[i].tank, tankToTankCollision);
             game.physics.arcade.overlap(bullets, remotePlayers[i].tank, bulletHitEnemy, null, this);
         }
+    }
+
+    if(obstacles) {
+      for(var i = 0; i < obstacles.length; i++) {
+        game.physics.arcade.overlap(tank, obstacles[i], playerHitObstacle);
+      }
     }
 
     if (cursors.left.isDown)
@@ -198,6 +205,11 @@ function bulletHitPlayer (tank, bullet) {
 
 }
 
+function playerHitObstacle() {
+  tank.x = turret.x;
+  tank.y = turret.y;
+}
+
 function bulletHitEnemy (tank, bullet) {
 
     bullet.kill();
@@ -205,6 +217,8 @@ function bulletHitEnemy (tank, bullet) {
 }
 
 function fire () {
+
+    performShooting();
 
     if (game.time.now > nextFire && bullets.countDead() > 0)
     {
@@ -214,9 +228,15 @@ function fire () {
 
         bullet.reset(turret.x, turret.y);
 
-        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 3000, game.input.activePointer, 500);
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300, game.input.activePointer);
     }
 
+}
+
+function tankToTankCollision() {
+    tank.x = turret.x;
+    tank.y = turret.y;
+    game.physics.arcade.velocityFromRotation(tank.rotation, 0, tank.body.velocity);
 }
 
 function render () {
