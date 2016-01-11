@@ -115,8 +115,6 @@ class EventsHandler {
 
   _onHit(wsServer) {
     return (player, missile) => {
-      player.hits += 1;
-
       if (player.hits === 5) {
         util.log(`Player ${player.id} destroyed!`);
         wsServer.sockets.emit('player destroyed', {player: player, missile: missile});
