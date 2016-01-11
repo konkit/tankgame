@@ -6,7 +6,8 @@ var canvas,			// Canvas DOM element
 		keys,			// Keyboard input
 		localPlayer,	// Local player
 		remotePlayers,	// Remote players
-		socket;			// Socket connection
+		socket,			// Socket connection
+		obstacles;
 
 
 /**************************************************
@@ -15,7 +16,7 @@ var canvas,			// Canvas DOM element
 function init() {
 
 	// Initialise socket connection
-	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+	socket = io.connect(window.location.hostname, {port: 8000, transports: ["websocket"]});
 
 	// Initialise remote players array
 	remotePlayers = [];
@@ -40,6 +41,8 @@ var setEventHandlers = function() {
 	socket.on("new player", onNewPlayer);
 
 	socket.on("existing players", onExistingPlayers);
+
+	socket.on("obstacles", onObstacles);
 
 	// Player move message received
 	socket.on("move player", onMovePlayer);
@@ -92,6 +95,29 @@ function onExistingPlayers(data) {
 
 	// Add new player to the remote players array
 };
+
+function onObstacles(data) {
+	phaserPolygons = data.polygons.map(function(polygon) { return new Phaser.Polygon(polygon.points) });
+	polygons = game.add.group();
+
+	obstacles = phaserPolygons.map(function(poly) {
+		var graphics = game.add.graphics(0, 0);
+
+		graphics.beginFill(0x5E563A);
+		graphics.drawPolygon(poly.points);
+		graphics.endFill();
+
+		var bounds = graphics.getBounds();
+
+		shapeSprite = game.add.sprite(bounds.x, bounds.y, null);
+		game.physics.enable(shapeSprite, Phaser.Physics.ARCADE);
+
+		shapeSprite.body.setSize(bounds.width, bounds.height, 0, 0);
+		shapeSprite.body.immovable = true;
+
+		return shapeSprite;
+	});
+}
 
 // Move player
 function onMovePlayer(data) {

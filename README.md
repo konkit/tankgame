@@ -1,5 +1,9 @@
 # TankGame
 
+## Live demo
+
+https://infinite-ravine-6752.herokuapp.com/
+
 ## Collaborators
 
 * Magdalena Strzoda
@@ -24,7 +28,7 @@
 3. Run with
 
         node app.js
-        
+
 ## Collaboration
 
 1. Clone repository
@@ -34,7 +38,7 @@
 2. Create feature branch
 
         git checkout -b initials-branch-name
-	
+
 3. Make changes and commit
 
 4. Push branch to origin

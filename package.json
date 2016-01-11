@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "postinstall" : "bower install"
   },
   "engine": ">= 4.0.0",
   "author": "",
@@ -16,8 +17,5 @@
     "util": "~0.10.3",
     "jade": "~1.11.0",
     "bower": "1.6.5"
-  },
-  "scripts": {
-    "postinstall" : "bower install"
   }
 }

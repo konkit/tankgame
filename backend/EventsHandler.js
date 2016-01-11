@@ -8,7 +8,7 @@ var Position = require('./Position');
 class EventsHandler {
   constructor(wsServer) {
     wsServer.on('connection', this._onSocketConnection());
-    this.worldMap = new WorldMap(new Position(-1000, -1000), 2000, 2000);
+    this.worldMap = new WorldMap(new Position(-1000, -1000), 2000, 2000, wsServer);
     this.worldMap.runGame(this._onHit(wsServer), this._onMissileLost(wsServer));
   }
 
@@ -65,6 +65,13 @@ class EventsHandler {
       client.emit('existing players', this.worldMap.players
         .filter((player) => player.id !== newPlayer.id)
       );
+
+      // emit obstacles
+      util.log("Sending obstacles");
+      client.emit('obstacles', this.worldMap.obstacles);
+
+
+
       // Broadcast new player to connected socket clients
       client.broadcast.emit('new player', newPlayer);
     };

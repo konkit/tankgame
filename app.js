@@ -17,7 +17,7 @@ class Application {
     new EventsHandler(wsServer);
 
     // Start Express.js server
-    wwwServer.listen(3000, () => util.log('listening on *:3000'));
+    wwwServer.listen(process.env.PORT || 3000, () => util.log('listening on *:3000'));
   }
 
   static _initExpress() {

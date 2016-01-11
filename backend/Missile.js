@@ -8,7 +8,7 @@ class Missile {
     this._position = this._initPosition = position;
     this._angle = angle;
     this._velocity = (typeof velocity != 'undefined' && velocity) || 300;
-    this._range = (typeof range != 'undefined' && range) || 500;
+    this._range = (typeof range != 'undefined' && range) || 1000;
     this._route = this._init_route();
   }
 
@@ -25,14 +25,14 @@ class Missile {
     return enemyDistance < 35;
   }
 
-  _nextPosition() {
-    let newX = this._position.x + this._velocity * Math.cos(this._angle);
-    let newY = this._position.y + this._velocity * Math.sin(this._angle);
+  _nextPosition(deltaTime) {
+    let newX = this._position.x + this._velocity * Math.cos(this._angle) * deltaTime;
+    let newY = this._position.y + this._velocity * Math.sin(this._angle) * deltaTime;
     return new Position(newX, newY);
   }
 
-  updatePosition() {
-    this._position = this._nextPosition();
+  updatePosition(deltaTime) {
+    this._position = this._nextPosition(deltaTime);
 
     let xDiff = this._position.x - this._initPosition.x;
     let yDiff = this._position.y - this._initPosition.y;

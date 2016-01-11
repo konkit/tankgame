@@ -1,5 +1,7 @@
 'use strict';
 
+var UPDATE_INTERVAL = 100;   // miliseconds
+
 var Player = require('./Player');
 var Position = require('./Position');
 var Missile = require('./Missile');
@@ -7,16 +9,19 @@ var ScoreManager = require('./ScoreManager')
 var MapOrganizer = require('./MapOrganizer');
 
 class WorldMap {
-	constructor(topLeftCornerPosition, width, height) {
+	constructor(topLeftCornerPosition, width, height, wsServer) {
 		this._players = [];
 		this.topLeftCornerPosition = topLeftCornerPosition;
 		this.width = width;
 		this.height = height;
 		this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
+		this.scoreManager = new ScoreManager(wsServer);
 	}
 
   runGame(hitCallback, missileLostCallback) {
     setInterval(() => {
+      let deltaTime = UPDATE_INTERVAL / 1000;   // Fixed value for now, ideally should be measured since the last iteration
+
       for (let player of this._players) {
         for (let missile of player.missiles) {
           // have to sort other players from closest to farest from missile
@@ -43,9 +48,9 @@ class WorldMap {
             }
           }
         }
-        player.updateMissilesPos(missileLostCallback);
+        player.updateMissilesPos(missileLostCallback, deltaTime);
       }
-    }, 100);
+    }, UPDATE_INTERVAL);
   }
 
   addPlayer(id, name, x, y) {

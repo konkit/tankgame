@@ -131,6 +131,12 @@ function update () {
         }
     }
 
+    if(obstacles) {
+      for(var i = 0; i < obstacles.length; i++) {
+        game.physics.arcade.overlap(tank, obstacles[i], playerHitObstacle);
+      }
+    }
+
     if (cursors.left.isDown)
     {
         tank.angle -= 2;
@@ -196,7 +202,22 @@ function update () {
 function bulletHitPlayer (tank, bullet) {
 
     bullet.kill();
+    showGameOverScreen();
+}
 
+function showGameOverScreen() {
+    game.paused = true;
+    var style = { font: "30px Arial", fill: "#ffffff" };
+    game.add.text(-200, -200, "Game over! To restart press F5.", style);
+}
+
+function restart() {
+
+}
+
+function playerHitObstacle() {
+  tank.x = turret.x;
+  tank.y = turret.y;
 }
 
 function bulletHitEnemy (tank, bullet) {
