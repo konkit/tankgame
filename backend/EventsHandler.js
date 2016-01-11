@@ -9,7 +9,7 @@ class EventsHandler {
   constructor(wsServer) {
     wsServer.on('connection', this._onSocketConnection());
     this.worldMap = new WorldMap(new Position(-1000, -1000), 2000, 2000, wsServer);
-    this.worldMap.runGame(this._onDestroy(wsServer), this._onMissileLost(wsServer));
+    this.worldMap.runGame(this._onHit(wsServer), this._onMissileLost(wsServer));
   }
 
   // New socket connection
@@ -59,6 +59,8 @@ class EventsHandler {
         util.log(`Player with id ${client.id} already exists!`);
         return;
       }
+
+      client.emit('onWelcome', newPlayer);
 
       util.log(`New player has joined the game: ${newPlayer.id}`);
       // Send existing players to the new player
@@ -111,10 +113,15 @@ class EventsHandler {
     };
   }
 
-  _onDestroy(wsServer) {
+  _onHit(wsServer) {
     return (player, missile) => {
-      util.log(`Player ${player.id} destroyed!`);
-      wsServer.sockets.emit('player destroyed', {player: player, missile: missile});
+      if (player.hits === 5) {
+        util.log(`Player ${player.id} destroyed!`);
+        wsServer.sockets.emit('player destroyed', {player: player, missile: missile});
+      } else {
+        util.log(`Player ${player.id} hit!`);
+        wsServer.sockets.emit('player damaged', {player: player, missile: missile});
+      }
     }
   }
 

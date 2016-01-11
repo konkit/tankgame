@@ -18,7 +18,7 @@ class WorldMap {
 		this.scoreManager = new ScoreManager(wsServer);
 	}
 
-  runGame(destroyCallback, missileLostCallback) {
+  runGame(hitCallback, missileLostCallback) {
     setInterval(() => {
       let deltaTime = UPDATE_INTERVAL / 1000;   // Fixed value for now, ideally should be measured since the last iteration
 
@@ -40,10 +40,10 @@ class WorldMap {
             if (missile.destroys(enemy.position)) {
               console.log(`Player ${enemy.id} hit by ${player.id}`);
               player.shotSucceeded(missile);
-              this.removePlayer(enemy.id);
+              this.hitPlayer(enemy.id);
               this.scoreManager.updateScores(this._players)
 
-              destroyCallback(enemy, missile);
+              hitCallback(enemy, missile);
               break;
             }
           }
@@ -63,13 +63,23 @@ class WorldMap {
     return player;
   }
 
+  hitPlayer(id) {
+    let player = this._playerById(id);
+    if (!player) return;
+
+    player.hits += 1;
+    if (player.hits === 5) {
+      this.removePlayer(id);
+    }
+
+    return player;
+  }
+
   removePlayer(id) {
     let player = this._playerById(id);
     if (!player) return;
 
-    // Remove player from players array
     this._players.splice(this._players.indexOf(player), 1);
-    return player;
   }
 
   movePlayer(id, x, y) {

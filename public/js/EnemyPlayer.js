@@ -1,7 +1,7 @@
 /**
  * Created by Radek Dyrda on 17.11.2015.
  */
-EnemyTank = function (index, name, game, x, y) {
+EnemyTank = function (index, name, game, x, y, hits) {
 
     this.game = game;
     this.name = name;
@@ -27,6 +27,9 @@ EnemyTank = function (index, name, game, x, y) {
     var style = { font: "30px Arial", fill: "#ffffff" };
     this.label = this.game.add.text(20, 20, name, style);
     this.tank.addChild(this.label);
+
+    this.healthBar = new HealthBar(this.game, {x: x, y: y-50, width: 70, height: 4});
+    this.healthBar.setPercent((5 - hits) * 20);
 };
 
 EnemyTank.prototype.update = function(x, y, angle, turret_angle) {
@@ -42,6 +45,7 @@ EnemyTank.prototype.update = function(x, y, angle, turret_angle) {
     this.turret.x = this.tank.x;
     this.turret.y = this.tank.y;
     this.turret.rotation = turret_angle;
+    this.healthBar.setPosition(x, y - 50);
 
 };
 
@@ -64,6 +68,7 @@ EnemyTank.prototype.destroy = function(withKaboom) {
     this.tank.destroy();
     this.turret.destroy();
     this.shadow.destroy();
+    this.healthBar.destroy();
 
     if(withKaboom) {
         var explosionAnimation = explosions.getFirstExists(false);

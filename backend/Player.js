@@ -7,6 +7,7 @@ class Player {
     this._position = position;
     this._missiles = [];
     this._score = 0;
+    this._hits = 0;
   }
 
   shotSucceeded(missile) {
@@ -48,6 +49,14 @@ class Player {
 
   get name() {
     return this._name;
+  }
+
+  get hits() {
+    return this._hits;
+  }
+
+  set hits(newValue){
+    this._hits = newValue;
   }
 }
 
