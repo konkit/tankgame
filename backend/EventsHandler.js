@@ -60,6 +60,8 @@ class EventsHandler {
         return;
       }
 
+      client.emit('onWelcome', newPlayer);
+
       util.log(`New player has joined the game: ${newPlayer.id}`);
       // Send existing players to the new player
       client.emit('existing players', this.worldMap.players

@@ -37,6 +37,8 @@ var setEventHandlers = function() {
 	// Socket disconnection
 	socket.on("disconnect", onSocketDisconnect);
 
+	socket.on("onWelcome", onWelcome);
+
 	// New player message received
 	socket.on("new player", onNewPlayer);
 
@@ -56,6 +58,8 @@ var setEventHandlers = function() {
 	socket.on("scores update", onScoresUpdate);
 
 	socket.on("player destroyed", onPlayerDestoryed);
+
+	socket.on("player damaged", onPlayerDamaged);
 };
 
 // Socket connected
@@ -74,6 +78,10 @@ function onSocketDisconnect() {
 	console.log("Disconnected from socket server");
 };
 
+function onWelcome(data) {
+	tank.id = data._id;
+}
+
 // New player
 function onNewPlayer(data) {
 	console.log("New player connected: " + data._id);
@@ -89,7 +97,7 @@ function onNewPlayer(data) {
 function onExistingPlayers(data) {
 
 	data.forEach(function(player){
-		var enemy = new EnemyTank(player._id, player._name || "no name", game, player._position.x, player._position.y);
+		var enemy = new EnemyTank(player._id, player._name || "no name", game, player._position.x, player._position.y, player._hits);
 		remotePlayers.push(enemy);
 	});
 
@@ -168,8 +176,21 @@ function onScoresUpdate(data) {
 }
 
 function onPlayerDestoryed(data) {
-	var player = playerById(data.player._id);
-	player.destroy(true);
+	if(data.player._id === tank.id){
+		showGameOverScreen();
+	} else {
+		var player = playerById(data.player._id);
+		player.destroy(true);
+	}
+}
+
+function onPlayerDamaged(data) {
+	if(data.player._id === tank.id){
+		tank.healthBar.setPercent((5 - data.player._hits) * 20)
+	} else {
+		var player = playerById(data.player._id);
+		player.healthBar.setPercent((5 - data.player._hits) * 20);
+	}
 }
 
 /**************************************************
