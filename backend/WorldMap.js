@@ -18,7 +18,7 @@ class WorldMap {
 		this.scoreManager = new ScoreManager(wsServer);
 	}
 
-  runGame(destroyCallback, missileLostCallback) {
+  runGame(hitCallback, missileLostCallback) {
     setInterval(() => {
       let deltaTime = UPDATE_INTERVAL / 1000;   // Fixed value for now, ideally should be measured since the last iteration
 
@@ -43,7 +43,7 @@ class WorldMap {
               this.removePlayer(enemy.id);
               this.scoreManager.updateScores(this._players)
 
-              destroyCallback(enemy, missile);
+              hitCallback(enemy, missile);
               break;
             }
           }
