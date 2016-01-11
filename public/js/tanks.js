@@ -208,7 +208,11 @@ function bulletHitPlayer (tank, bullet) {
 function showGameOverScreen() {
     game.paused = true;
     var style = { font: "30px Arial", fill: "#ffffff" };
-    game.add.text(-20, -200, "Game over!", style);
+    game.add.text(-200, -200, "Game over! To restart press F5.", style);
+}
+
+function restart() {
+
 }
 
 function playerHitObstacle() {
