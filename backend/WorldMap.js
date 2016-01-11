@@ -69,10 +69,17 @@ class WorldMap {
 
     player.hits += 1;
     if (player.hits === 5) {
-      this._players.splice(this._players.indexOf(player), 1);
+      this.removePlayer(id);
     }
 
     return player;
+  }
+
+  removePlayer(id) {
+    let player = this._playerById(id);
+    if (!player) return;
+
+    this._players.splice(this._players.indexOf(player), 1);
   }
 
   movePlayer(id, x, y) {
