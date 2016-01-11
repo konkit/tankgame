@@ -40,7 +40,7 @@ class WorldMap {
             if (missile.destroys(enemy.position)) {
               console.log(`Player ${enemy.id} hit by ${player.id}`);
               player.shotSucceeded(missile);
-              this.removePlayer(enemy.id);
+              this.hitPlayer(enemy.id);
               this.scoreManager.updateScores(this._players)
 
               hitCallback(enemy, missile);
@@ -63,12 +63,15 @@ class WorldMap {
     return player;
   }
 
-  removePlayer(id) {
+  hitPlayer(id) {
     let player = this._playerById(id);
     if (!player) return;
 
-    // Remove player from players array
-    this._players.splice(this._players.indexOf(player), 1);
+    player.hits += 1;
+    if (player.hits === 5) {
+      this._players.splice(this._players.indexOf(player), 1);
+    }
+
     return player;
   }
 
