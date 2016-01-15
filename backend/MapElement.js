@@ -4,7 +4,7 @@ class MapElement {
 	constructor(id, polygon, isSpawnPoint) {
 		//assumption polygon represents convex set
 		this.id = id;
-		this.size = size;
+		//this.size = size;
 		this.polygon = polygon.sort(function (e1, e2) {
 			return Math.atan2(e1.y, e1.x) - Math.atan2(e2.y, e2.x)
 		});

@@ -32,10 +32,14 @@ var cursors;
 var bullets;
 var fireRate = 100;
 var nextFire = 0;
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function create () {
 
     //  Resize our game world to be a 2000 x 2000 square
+
     game.world.setBounds(-1000, -1000, 2000, 2000);
 
     //  Our tiled scrolling background
@@ -43,7 +47,7 @@ function create () {
     land.fixedToCamera = true;
 
     //  The base of our tank
-    tank = game.add.sprite(0, 0, 'tank', 'tank1');
+    tank = game.add.sprite(getRandomInt(-1000, 2000), getRandomInt(-1000, 2000), 'tank', 'tank1');
     tank.anchor.setTo(0.5, 0.5);
     tank.animations.add('move', ['tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6'], 20, true);
 

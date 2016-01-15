@@ -14,7 +14,7 @@ class WorldMap {
 		this.topLeftCornerPosition = topLeftCornerPosition;
 		this.width = width;
 		this.height = height;
-		this.obstacles = new MapOrganizer(1, 10, width - topLeftCornerPosition.x, height - topLeftCornerPosition.y).createMap();
+		this.obstacles = new MapOrganizer(10, 50, topLeftCornerPosition, width, height).createMap();
 		this.scoreManager = new ScoreManager(wsServer);
 	}
 

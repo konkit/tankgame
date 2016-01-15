@@ -4,12 +4,14 @@ var MapElement = require('./MapElement');
 var WorldMap = require('./WorldMap');
 
 class MapOrganizer {
-    constructor(spawnAreaNumber, obstacleNumber, mapXSize, mapYSize) {
+    constructor(spawnAreaNumber, obstacleNumber, topLeftCornerPosition, mapXSize, mapYSize) {
 
         this.spawnAreaNumber = spawnAreaNumber;
         this.obstacleNumber = obstacleNumber;
+        this.topLeftCornerPosition = topLeftCornerPosition;
         this.mapXSize = mapXSize;
         this.mapYSize = mapYSize;
+        this.spawnAreas = [];
         console.log(this.mapXSize);
     }
 
@@ -29,19 +31,65 @@ class MapOrganizer {
 
     createMap() {
         let plan = [];
-        let polygonSide = 400;
-        let spawnArea = this.createPolygon({'x': -200, 'y': -200}, polygonSide)
+        let spawnAreaMapElements = []
+        let planMapElements = []
+        let polygonSide = 100;
+        let spawnAreaSide = 200;
+        // let spawnArea = this.createPolygon({'x': -200, 'y': -200}, polygonSide)
+
+        let isIntersect = false
+        let id = 0;
 
         for (let i = 0; i < this.obstacleNumber; i++) {
             //TODo Chck collison
             plan.push({
                 'points': this.createPolygon({
-                    'x': this.getRandomInt(0, this.mapXSize - polygonSide),
-                    'y': this.getRandomInt(0, this.mapYSize - polygonSide),
+                    'x': this.getRandomInt(this.topLeftCornerPosition.x, this.mapXSize - polygonSide),
+                    'y': this.getRandomInt(this.topLeftCornerPosition.y, this.mapYSize - polygonSide),
                     color: "#fff"
                 }, polygonSide)
             })
         }
+
+        spawnAreaMapElements.push({
+            'points': this.createPolygon({
+                'x': this.getRandomInt(this.topLeftCornerPosition.x, this.mapXSize - polygonSide),
+                'y': this.getRandomInt(this.topLeftCornerPosition.y, this.mapYSize - polygonSide),
+                color: "#fff"
+            }, polygonSide)
+        })
+
+        for(let i=0; i<this.spawnAreaNumber - 1;i++){
+
+          let isSpawnPointAdded = false;
+
+          while(!isIntersect && !isSpawnPointAdded) {
+              //let allPointsCheck = false;
+              let spawnArea = this.createPolygon({
+                  'x': this.getRandomInt(this.topLeftCornerPosition.x, this.mapXSize - spawnAreaSide),
+                  'y': this.getRandomInt(this.topLeftCornerPosition.y, this.mapYSize - spawnAreaSide)}, spawnAreaSide);
+
+              let spawnAreaMapElement = new MapElement(id, spawnArea, true);
+              for(let j = 0; j < spawnAreaMapElements.length; j++) {
+                  if(spawnAreaMapElement.intersect(spawnAreaMapElements[j])) {
+                      isIntersect = true;
+                  }
+              }
+
+              for(let j = 0; j < plan.length; j++) {
+                  if(spawnAreaMapElement.intersect(plan[j])) {
+                      isIntersect = true;
+                  }
+              }
+
+              if(!isIntersect) {
+                  spawnAreaMapElements.push(spawnAreaMapElement);
+                  isSpawnPointAdded = true;
+              }
+          }
+      }
+
+
 
 
         return {'polygons': plan};
