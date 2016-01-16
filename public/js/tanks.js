@@ -53,7 +53,7 @@ function create () {
     tank.body.maxVelocity.setTo(100, 100);
     tank.body.collideWorldBounds = true;
 
-    tank.healthBar = new HealthBar(this.game, {x: tank.x, y: tank.y-50, width: 70, height: 4});
+    tank.healthBar = new HealthBar(this.game, {x: tank.x, y: tank.y-50, width: 70, height: 4, bar: { color: '#00FF00' }});
 
     //  Finally the turret that we place on-top of the tank body
     turret = game.add.sprite(0, 0, 'tank', 'turret');
