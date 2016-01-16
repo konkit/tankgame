@@ -29,13 +29,14 @@ class Application {
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'jade');
     // Serving static files
-    app.use('/public', express.static('public'));
+    //app.use('/public', express.static('public'));
     // Serving index.html as default
-    app.get('/', (req, res) => res.render('index'));
-
+    //app.get('/', (req, res) => res.render('index'));
     app.use(session({ secret: 'ilovetankgame' })); // session secret
     app.use(passport.initialize());
     app.use(passport.session()); // persistent login sessions
+    app.use(flash());
+    require('./backend/Routes')(app, passport);
 
     return app;
   }

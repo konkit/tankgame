@@ -1,7 +1,7 @@
 module.exports = function(app, passport) {
 
     app.get('/', function(req, res) {
-        res.render('index.jade'); // load the index.ejs file
+        res.render('index');
     });
 
     // =====================================
@@ -19,15 +19,19 @@ module.exports = function(app, passport) {
     // =====================================
     // SIGNUP ==============================
     // =====================================
-    // show the signup form
+    // show the signup.jade form
     app.get('/signup', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('signup.html', { message: req.flash('signupMessage') });
+        res.render('signup', { message: req.flash('signupMessage') });
     });
 
-    // process the signup form
-    // app.post('/signup', do all our passport stuff here);
+    // process the signup.jade form
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/', // redirect to the secure profile section
+        failureRedirect : '/signup', // redirect back to the signup.jade page if there is an error
+        failureFlash : true // allow flash messages
+    }));
 
     // =====================================
     // LOGOUT ==============================

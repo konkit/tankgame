@@ -2,7 +2,7 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
-var User = require('.User');
+var User = require('./User');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -28,7 +28,7 @@ module.exports = function(passport) {
     // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
+    // we are using named strategies since we have one for login and one for signup.jade
     // by default, if there was no name, it would just be called 'local'
 
     passport.use('local-signup', new LocalStrategy({
