@@ -4,9 +4,12 @@
 
 var util = require('util');
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var http = require('http');
 var socket = require('socket.io');
+var passport = require('passport');
+var flash    = require('connect-flash');
 var EventsHandler = require('./backend/EventsHandler');
 
 class Application {
@@ -29,6 +32,11 @@ class Application {
     app.use('/public', express.static('public'));
     // Serving index.html as default
     app.get('/', (req, res) => res.render('index'));
+
+    app.use(session({ secret: 'ilovetankgame' })); // session secret
+    app.use(passport.initialize());
+    app.use(passport.session()); // persistent login sessions
+
     return app;
   }
 }
