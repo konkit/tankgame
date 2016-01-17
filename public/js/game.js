@@ -60,6 +60,8 @@ var setEventHandlers = function() {
 	socket.on("player destroyed", onPlayerDestoryed);
 
 	socket.on("player damaged", onPlayerDamaged);
+
+	socket.on("restart", onRestart);
 };
 
 // Socket connected
@@ -139,6 +141,7 @@ function onMovePlayer(data) {
 
 	// Update player position
 	movePlayer.update(data._position.x, data._position.y, data.angle, data.turret_angle);
+	movePlayer.visible = true;
 };
 
 function onEnemyShot(data) {
@@ -153,17 +156,23 @@ function onEnemyShot(data) {
 
 // Remove player
 function onRemovePlayer(data) {
-	var removePlayer = playerById(data.id);
+	if ( data.id !== tank.id ) {
+		// remove only enemy players
 
-	// Player not found
-	if (!removePlayer) {
-		console.log("Player not found: "+data.id);
-		return;
-	};
+		var removePlayer = playerById(data.id);
 
-	// Remove player from array
-	removePlayer.destroy();
-	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+		// Player not found
+		if (!removePlayer) {
+			console.log("Player not found: " + data.id);
+			return;
+		}
+		;
+
+		// Remove player from array
+		console.log("Removing player: " + data.id);
+		removePlayer.destroy();
+		remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+	}
 };
 
 function onScoresUpdate(data) {
@@ -180,7 +189,7 @@ function onPlayerDestoryed(data) {
 		showGameOverScreen();
 	} else {
 		var player = playerById(data.player._id);
-		player.destroy(true);
+		player.kill(true);
 	}
 }
 
@@ -190,6 +199,18 @@ function onPlayerDamaged(data) {
 	} else {
 		var player = playerById(data.player._id);
 		player.healthBar.setPercent((5 - data.player._hits) * 20);
+	}
+}
+
+function onRestart(data) {
+	if ( data._id === tank.id ) {
+		// TODO: move player to spawn area
+	} else {
+		var player = playerById(data._id);
+		console.log("Restart player: " + data._id);
+		player.reset();
+		player.healthBar.setPercent(100); // reset health
+		// TODO: move player to spawn area
 	}
 }
 

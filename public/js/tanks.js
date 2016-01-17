@@ -209,13 +209,10 @@ function bulletHitPlayer (tank, bullet) {
 }
 
 function showGameOverScreen() {
-    game.paused = true;
-    var style = { font: "30px Arial", fill: "#ffffff" };
-    game.add.text(-200, -200, "Game over! To restart press F5.", style);
-}
-
-function restart() {
-
+    alert("Game over! Press OK and the game will restart.");
+    socket.emit("restart");
+    tank.healthBar.setPercent(100); // reset health
+    console.log("Restart");
 }
 
 function playerHitObstacle() {

@@ -63,16 +63,32 @@ EnemyTank.prototype.shoot = function(target) {
     }
 };
 
-EnemyTank.prototype.destroy = function(withKaboom) {
-    withKaboom = (typeof withKaboom != 'undefined' && withKaboom) || false;
+EnemyTank.prototype.destroy = function() {
+    // permanently destroy player
     this.tank.destroy();
     this.turret.destroy();
     this.shadow.destroy();
     this.healthBar.destroy();
+};
+
+EnemyTank.prototype.kill = function(withKaboom) {
+    withKaboom = (typeof withKaboom != 'undefined' && withKaboom) || false;
+
+    this.tank.kill();
+    this.turret.kill();
+    this.shadow.kill();
+    this.healthBar.kill();
 
     if(withKaboom) {
         var explosionAnimation = explosions.getFirstExists(false);
         explosionAnimation.reset(this.tank.x, this.tank.y);
         explosionAnimation.play('kaboom', 30, false, true);
     }
+};
+
+EnemyTank.prototype.reset = function() {
+    this.tank.reset();
+    this.turret.reset();
+    this.shadow.reset();
+    this.healthBar.reset();
 };

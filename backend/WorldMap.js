@@ -41,7 +41,7 @@ class WorldMap {
               console.log(`Player ${enemy.id} hit by ${player.id}`);
               player.shotSucceeded(missile);
               this.hitPlayer(enemy.id);
-              this.scoreManager.updateScores(this._players)
+              this.scoreManager.updateScores(this._players);
 
               hitCallback(enemy, missile);
               break;
@@ -69,7 +69,7 @@ class WorldMap {
 
     player.hits += 1;
     if (player.hits === 5) {
-      this.removePlayer(id);
+      // this.removePlayer(id);  // don't remove the player to keep scores
     }
 
     return player;
@@ -80,6 +80,7 @@ class WorldMap {
     if (!player) return;
 
     this._players.splice(this._players.indexOf(player), 1);
+    return player;
   }
 
   movePlayer(id, x, y) {
@@ -97,6 +98,17 @@ class WorldMap {
     if (!player) return;
 
     player.missiles.push(missile);
+    return player;
+  }
+
+  restartPlayer(id) {
+    let player = this._playerById(id);
+    if ( !player ) return;
+
+    player.hits = 0;  // reset health
+    //player.position.x = 0.5;
+    //player.position.y = 0.5;
+
     return player;
   }
 
