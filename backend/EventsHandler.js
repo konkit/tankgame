@@ -28,6 +28,9 @@ class EventsHandler {
 
       // Listen for shoots
       client.on('shoot', this._onShoot(client));
+
+      // Listen for player restart message
+      client.on('restart', this._onRestart(client));
     };
   }
 
@@ -111,6 +114,16 @@ class EventsHandler {
       missile.ownerId = player.id;
       client.broadcast.emit('missile fired', missile);
     };
+  }
+
+  _onRestart(client) {
+    return data => {
+      console.log("Restart for client " + client.id);
+
+      var player = this.worldMap.restartPlayer(client.id);
+
+      client.broadcast.emit('restart', player);
+    }
   }
 
   _onHit(wsServer) {
